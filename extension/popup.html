@@ -2,14 +2,14 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Hello</title>
+        <title>Ex</title>
         <style>
             body {
-                width: 300px;
+                width: 800px;
                 padding: 10px;
                 font-family: sans-serif;
             }
-            #status {
+            #content {
                 color: black;
                 font-weight: bold;
                 word-break: break-all;
@@ -17,9 +17,11 @@
         </style>
     </head>
     <body>
-        <h1>Etherum Generator</h1>
+        <h1>Wallet Generator</h1>
         <button id="runEtherum">Generate ETH</button>
-        <p id="status"></p>
+        <button id="runSolana">Generate Solana</button>
+        <button id="runClean">Clean</button>
+        <div id="content"></div>
         <script src="popup.js" type="module"></script>
     </body>
 </html>
