@@ -2,26 +2,267 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>Ex</title>
+        <title>Wallet Generator</title>
         <style>
-            body {
-                width: 800px;
-                padding: 10px;
-                font-family: sans-serif;
+            :root {
+                --primary-color: #6200ee;
+                --primary-hover: #3700b3;
+                --danger-color: #e53935;
+                --danger-hover: #b71c1c;
+                --background: #f5f5f5;
+                --surface: #ffffff;
+                --text-main: #212121;
+                --text-muted: #666666;
+                --shadow-1:
+                    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+                    0 3px 1px -2px rgba(0, 0, 0, 0.12),
+                    0 1px 5px 0 rgba(0, 0, 0, 0.2);
+                --shadow-2:
+                    0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                    0 2px 4px -1px rgba(0, 0, 0, 0.3);
             }
+
+            body {
+                width: 760px;
+                margin: 0;
+                padding: 20px;
+                font-family: "Roboto", sans-serif;
+                background-color: var(--background);
+                color: var(--text-main);
+                -webkit-font-smoothing: antialiased;
+            }
+
+            h1 {
+                font-size: 24px;
+                font-weight: 400;
+                margin-top: 0;
+                margin-bottom: 24px;
+                color: var(--primary-color);
+            }
+
+            .actions-bar {
+                margin-bottom: 24px;
+                display: flex;
+                gap: 12px;
+            }
+
+            button {
+                border: none;
+                border-radius: 4px;
+                display: inline-block;
+                height: 36px;
+                line-height: 36px;
+                padding: 0 16px;
+                text-transform: uppercase;
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                vertical-align: middle;
+                cursor: pointer;
+                box-shadow: var(--shadow-1);
+                transition:
+                    background-color 0.2s,
+                    box-shadow 0.2s;
+            }
+
+            button:focus {
+                outline: none;
+            }
+
+            button:active {
+                box-shadow: var(--shadow-2);
+            }
+
+            #runEtherum,
+            #runSolana {
+                background-color: var(--primary-color);
+                color: #ffffff;
+            }
+
+            #runEtherum:hover,
+            #runSolana:hover {
+                background-color: var(--primary-hover);
+            }
+
+            #runClean {
+                background-color: var(--danger-color);
+                color: #ffffff;
+            }
+
+            #runClean:hover {
+                background-color: var(--danger-hover);
+            }
+
             #content {
-                color: black;
-                font-weight: bold;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .wallet-card {
+                background: var(--surface);
+                border-radius: 4px;
+                padding: 16px 24px;
+                box-shadow: var(--shadow-1);
                 word-break: break-all;
+                position: relative;
+            }
+
+            .wallet-card .network-badge {
+                display: inline-block;
+                font-size: 12px;
+                font-weight: bold;
+                text-transform: uppercase;
+                padding: 4px 8px;
+                border-radius: 2px;
+                color: #ffffff;
+                margin-bottom: 12px;
+            }
+
+            .wallet-card.eth .network-badge {
+                background-color: #455a64;
+            }
+            .wallet-card.solana .network-badge {
+                background-color: #00b0ff;
+            }
+
+            .wallet-card p {
+                margin: 6px 0;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .wallet-card .label {
+                color: var(--text-muted);
+                font-weight: 500;
+                display: block;
+                font-size: 12px;
+                text-transform: uppercase;
+                margin-top: 8px;
+            }
+
+            .wallet-card .value {
+                font-family: monospace;
+                font-size: 14px;
+                color: var(--text-main);
+            }
+
+            .wallet-card {
+                background: var(--surface);
+                border-radius: 4px;
+                padding: 16px 24px;
+                box-shadow: var(--shadow-1);
+                word-break: break-all;
+                position: relative;
+            }
+
+            .wallet-card .delete-btn {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: transparent;
+                color: var(--text-muted);
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                height: auto;
+                line-height: normal;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                text-transform: none;
+                transition: color 0.2s;
+            }
+
+            .wallet-card .delete-btn:hover {
+                color: var(--danger-color);
+                background: transparent;
+            }
+
+            .wallet-card .delete-btn:active {
+                box-shadow: none;
+            }
+
+            .wallet-card .mark-btn {
+                position: absolute;
+                top: 12px;
+                right: 40px;
+                background: transparent;
+                color: var(--text-muted);
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                height: auto;
+                line-height: normal;
+                font-size: 16px;
+                cursor: pointer;
+                text-transform: none;
+                transition:
+                    color 0.2s,
+                    transform 0.2s;
+            }
+
+            .wallet-card .mark-btn:hover {
+                color: #ffb300;
+                background: transparent;
+                transform: scale(1.2);
+            }
+
+            .wallet-card .mark-btn:active {
+                box-shadow: none;
+            }
+
+            .wallet-card.marked {
+                border-left: 6px solid #ffb300;
+                background-color: #fffde7;
+            }
+
+            .wallet-card.marked .mark-btn {
+                color: #ffb300;
+            }
+
+            .wallet-card .save-btn {
+                position: absolute;
+                top: 12px;
+                right: 68px;
+                background: transparent;
+                color: var(--text-muted);
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                height: auto;
+                line-height: normal;
+                font-size: 16px;
+                cursor: pointer;
+                text-transform: none;
+                transition:
+                    color 0.2s,
+                    transform 0.2s;
+            }
+
+            .wallet-card .save-btn:hover {
+                color: #4caf50;
+                background: transparent;
+                transform: scale(1.2);
+            }
+
+            .wallet-card .save-btn:active {
+                box-shadow: none;
             }
         </style>
     </head>
     <body>
         <h1>Wallet Generator</h1>
-        <button id="runEtherum">Generate ETH</button>
-        <button id="runSolana">Generate Solana</button>
-        <button id="runClean">Clean</button>
+
+        <div class="actions-bar">
+            <button id="runEtherum">Generate ETH</button>
+            <button id="runSolana">Generate Solana</button>
+            <button id="runClean">Clean</button>
+        </div>
+
         <div id="content"></div>
+
         <script src="popup.js" type="module"></script>
     </body>
 </html>
